@@ -2,18 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//INHERITANCE SmallBall and BigBall scripts inherit from this script
 public class PlayerScript : MonoBehaviour
 {
-    [SerializeField] float speed = 500f;
+    //ENCAPSULATION
+    protected float m_speed;
+    public float Speed 
+    {
+        get {return m_speed;}
+        set {m_speed = value;}
+    }
     protected const float turning = 45f;
     protected float horiInput;
     protected float vertInput;
     protected Rigidbody rb;
+    public GameObject focal;
+    protected GameObject player;
+    protected Material playerMat;
+    private bool initMove = true;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        focal = GameObject.Find("Focal");
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerMat = player.GetComponent<MeshRenderer>().material;
+        rb = player.GetComponent<Rigidbody>();
+        ChangeColor();
     }
 
     // Update is called once per frame
@@ -22,7 +36,30 @@ public class PlayerScript : MonoBehaviour
         horiInput = Input.GetAxis("Horizontal");
         vertInput = Input.GetAxis("Vertical");
 
-        rb.AddForce(Vector3.forward * speed * vertInput);
-        gameObject.transform.Rotate(Vector3.up, Time.deltaTime * turning * horiInput);
+        if (vertInput != 0 && initMove)
+        {
+            GameObject.Find("Gameplay").GetComponent<Gameplay>().started = true;
+            initMove = false;
+        }
+        //ABSTRACTION
+        MovePlayer();
+    }
+    void MovePlayer()
+    {
+        rb.AddForce(focal.transform.forward * vertInput * Speed);
+        rb.AddForce(focal.transform.right * horiInput * Speed);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Respawn"))
+        {
+            GameObject.Find("Gameplay").GetComponent<Gameplay>().RestartScene();
+        }
+    }
+    //POLYMORPHISM
+    public virtual void ChangeColor()
+    {
+        playerMat.color = Color.white;
     }
 }
