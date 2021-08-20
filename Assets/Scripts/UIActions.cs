@@ -17,7 +17,7 @@ public class UIActions : MonoBehaviour
         SceneManager.LoadScene(1);
 
     }
-
+    // Setting ballSize to the one from menu button
     public void SetBall(string size)
     {
         MainManager.Instance.ballSize = size;

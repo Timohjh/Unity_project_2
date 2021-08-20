@@ -7,12 +7,14 @@ using UnityEngine.SceneManagement;
 public class Gameplay : MonoBehaviour
 {
     float timer;
+
+    [Tooltip("has the timer started?")]
     public bool started = false;
     public TextMeshProUGUI timerText;
     public GameObject restartButton;
     public GameObject menuButton;
     GameObject player;
-    // Start is called before the first frame update
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -22,6 +24,7 @@ public class Gameplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // timer is set true in PlayerScript's FixedUpdate
         if (started)
         {
             StartTimer();
