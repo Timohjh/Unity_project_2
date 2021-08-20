@@ -30,12 +30,12 @@ public class PlayerScript : MonoBehaviour
         ChangeColor();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         horiInput = Input.GetAxis("Horizontal");
         vertInput = Input.GetAxis("Vertical");
 
+        // the first time moving forward => start timer
         if (vertInput != 0 && initMove)
         {
             GameObject.Find("Gameplay").GetComponent<Gameplay>().started = true;
@@ -50,6 +50,7 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(focal.transform.right * horiInput * Speed);
     }
 
+    // if player falls of the map => restart game
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Respawn"))
@@ -58,6 +59,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
     //POLYMORPHISM
+    // overide in child scripts
     public virtual void ChangeColor()
     {
         playerMat.color = Color.white;
